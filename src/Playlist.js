@@ -453,7 +453,7 @@ export default class {
           track.setState(this.getState());
           track.setStartTime(start);
           track.setPlayout(playout);
-        track.setSpeed(1);
+          track.setSpeed(1);
           track.setGainLevel(gain);
           track.setStereoPanValue(stereoPan);
           if (effects) {
@@ -493,7 +493,11 @@ export default class {
   }
 
   setSpeed(speed) {
+    console.log('setSpeedjs',speed);
     this.speed = (speed >= 0.5 && speed <= 4) ? speed : 1;
+    this.tracks.forEach((track) => {
+      track.setSpeed(this.speed);
+    });
     if (this.isPlaying()) {
       this.restartPlayFrom(this.playbackSeconds);
     }
