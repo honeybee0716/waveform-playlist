@@ -158,6 +158,11 @@ export default class {
     this.source.start(when, start, duration);
   }
 
+  setSpeed(speed) {
+    this.speed = 1
+    this.source.playbackRate = speed
+  }
+
   stop(when = 0) {
     if (this.source) {
       this.source.stop(when);

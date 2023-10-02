@@ -340,7 +340,6 @@ export default class {
       }
     });
     playoutSystem.setSpeed(this.speed);
-
     playoutSystem.setVolumeGainLevel(this.gain);
     playoutSystem.setShouldPlay(options.shouldPlay);
     playoutSystem.setMasterGainLevel(options.masterGain);
