@@ -24,7 +24,7 @@ export default class {
     this.mutedTracks = [];
     this.collapsedTracks = [];
     this.playoutPromises = [];
-
+    this.speed = 1;
     this.cursor = 0;
     this.playbackSeconds = 0;
     this.duration = 0;
@@ -197,6 +197,10 @@ export default class {
 
   setUpEventEmitter() {
     const ee = this.ee;
+
+    ee.on('speedchange', (speed) => {
+      this.setSpeed(speed);
+    });
 
     ee.on("automaticscroll", (val) => {
       this.isAutomaticScroll = val;
@@ -449,7 +453,7 @@ export default class {
           track.setState(this.getState());
           track.setStartTime(start);
           track.setPlayout(playout);
-
+        track.setSpeed(1);
           track.setGainLevel(gain);
           track.setStereoPanValue(stereoPan);
           if (effects) {
@@ -486,6 +490,14 @@ export default class {
   */
   setActiveTrack(track) {
     this.activeTrack = track;
+  }
+
+  setSpeed(speed) {
+    this.speed = (speed >= 0.5 && speed <= 4) ? speed : 1;
+    if (this.isPlaying()) {
+      this.restartPlayFrom(this.playbackSeconds);
+    }
+    this.ee.emit('speedchanged', this.speed);
   }
 
   getActiveTrack() {
@@ -763,6 +775,7 @@ export default class {
       this.tracks && this.tracks[0].playout.setMasterEffects(this.effectsGraph);
 
     this.tracks.forEach((track) => {
+      track.setSpeed(this.speed);
       track.setState("cursor");
       playoutPromises.push(
         track.schedulePlay(currentTime, start, end, {
@@ -904,7 +917,7 @@ export default class {
     const elapsed = currentTime - this.lastDraw;
 
     if (this.isPlaying()) {
-      const playbackSeconds = cursorPos + elapsed;
+      const playbackSeconds = cursorPos + (elapsed * this.speed);
       this.ee.emit("timeupdate", playbackSeconds);
       this.animationRequest = window.requestAnimationFrame(() => {
         this.updateEditor(playbackSeconds);

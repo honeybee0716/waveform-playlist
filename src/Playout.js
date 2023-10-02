@@ -13,6 +13,8 @@ export default class {
     this.buffer = buffer;
     this.masterGain = masterGain;
     this.destination = this.ac.destination;
+    this.speed = 1;
+
   }
 
   applyFade(type, start, duration, shape = "logarithmic") {

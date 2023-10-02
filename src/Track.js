@@ -189,6 +189,10 @@ export default class {
     );
   }
 
+  setSpeed(speed) {
+    this.speed = speed;
+  }
+
   setPeaks(peaks) {
     this.peaks = peaks;
   }
@@ -283,8 +287,7 @@ export default class {
     if (this.startTime >= startTime) {
       start = 0;
       // schedule additional delay for this audio node.
-      when += this.startTime - startTime;
-
+      when += (this.startTime - startTime) / this.speed;
       if (endTime) {
         segment -= this.startTime - startTime;
         duration = Math.min(segment, this.duration);
@@ -314,11 +317,11 @@ export default class {
       // only apply fade if it's ahead of the cursor.
       if (relPos < fade.end) {
         if (relPos <= fade.start) {
-          fadeStart = now + (fade.start - relPos);
-          fadeDuration = fade.end - fade.start;
+          fadeStart = now + ((fade.start - relPos)  / this.speed);
+          fadeDuration = ((fade.end - fade.start)  / this.speed);
         } else if (relPos > fade.start && relPos < fade.end) {
-          fadeStart = now - (relPos - fade.start);
-          fadeDuration = fade.end - fade.start;
+          fadeStart = now - ((relPos - fade.start)  / this.speed);
+          fadeDuration = ((fade.end - fade.start)  / this.speed);
         }
 
         switch (fade.type) {
@@ -336,6 +339,7 @@ export default class {
         }
       }
     });
+    playoutSystem.setSpeed(this.speed);
 
     playoutSystem.setVolumeGainLevel(this.gain);
     playoutSystem.setShouldPlay(options.shouldPlay);
