@@ -160,7 +160,7 @@ export default class {
 
   setSpeed(speed) {
     this.speed = 1
-    this.source.playbackRate = speed
+    this.source.playbackRate.value = speed
   }
 
   stop(when = 0) {
