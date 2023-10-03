@@ -58,7 +58,7 @@ export default class {
   setUpSource() {
     this.source = this.ac.createBufferSource();
     this.source.buffer = this.buffer;
-
+    this.source.playbackRate.value = 4
     let cleanupEffects;
     let cleanupMasterEffects;
 
